@@ -1,4 +1,5 @@
-import { Box, Card, CardBody, Checkbox, Container, HStack, Input, Tab, TabList, TabPanel, TabPanels, Tabs, Text, VStack } from "@chakra-ui/react"
+import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
+import { TaskContainer } from "../features/task/components/TaskContainer"
 
 export const Main = () => {
 	return (
@@ -10,17 +11,7 @@ export const Main = () => {
 					</TabList>
 					<TabPanels>
 						<TabPanel px="0">
-							<VStack>
-								<Input placeholder="+" bg="white" />
-								<Card width="full" size="sm">
-									<CardBody>
-										<HStack>
-											<Checkbox />
-											<Text>test</Text>
-										</HStack>
-									</CardBody>
-								</Card>
-							</VStack>
+							<TaskContainer />
 						</TabPanel>
 					</TabPanels>
 				</Tabs>
