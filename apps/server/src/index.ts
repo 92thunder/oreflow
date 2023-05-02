@@ -28,10 +28,14 @@ server.get('/callback', async (request: CallbackRequest, reply) => {
     "client_id": GITHUB_CLIENT_ID,
     "client_secret": GITHUB_CLIENT_SECRET,
     "code": code,
-    "redirect_uri": "",
-    "accept": "application/json",
+  }, {
+    headers: {
+      "Accept": "application/json",
+    }
   })
-  const accessToken = response.data.json['access_token']
+  console.log(response.data)
+  const accessToken = response.data.access_token
+  console.error(accessToken)
   reply.redirect(`https://oreflow.92thunder.dev/settings?access_token=${accessToken}`)
 })
 
