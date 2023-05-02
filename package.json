@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "workspaces": [
-    "apps/web"
-  ]
+    "apps/web",
+    "apps/server"
+  ],
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
 }
