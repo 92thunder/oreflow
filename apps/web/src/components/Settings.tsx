@@ -1,6 +1,7 @@
 import { LinkIcon } from "@chakra-ui/icons";
 import { Button, Container, Heading } from "@chakra-ui/react";
 import { FC } from "react";
+import { accessTokenRepository } from "../features/task/repositories/accessTokenRepository";
 
 const CLIENT_ID = "dee99d42f2afdd9cc7ee"
 const REDIRECT_URI = 'https://oreflow.onrender.com/callback'
@@ -8,9 +9,8 @@ const REDIRECT_URI = 'https://oreflow.onrender.com/callback'
 export const Settings: FC = () => {
 	const params = new URLSearchParams(window.location.search)
 	const accessToken = params.get('access_token')
-	console.log(accessToken)
 	if (accessToken) {
-		localStorage.setItem('accessToken', accessToken)
+		accessTokenRepository.set(accessToken)
 		window.location.search = ''
 	}
 

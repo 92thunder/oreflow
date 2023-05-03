@@ -33,7 +33,6 @@ server.get('/callback', async (request: CallbackRequest, reply) => {
       "Accept": "application/json",
     }
   })
-  console.log(response.data)
   const accessToken = response.data.access_token
   console.error(accessToken)
   reply.redirect(`https://oreflow.92thunder.dev/settings?access_token=${accessToken}`)
