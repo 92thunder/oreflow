@@ -12,6 +12,7 @@ export const useHasIssuesReposQuery = () => {
 			return response.data
 				.filter((repo) => repo.open_issues_count > 0)
 		},
+		enabled: !!accessTokenRepository.get(),
 	})
 }
 

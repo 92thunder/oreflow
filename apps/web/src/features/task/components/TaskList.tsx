@@ -4,11 +4,13 @@ import { tasksAtom } from "../state"
 import { TaskCard } from "./TaskCard"
 import { useHasIssuesReposQuery } from "../queries/github"
 import { GithubRepoTasks } from "./GithubRepoTasks"
+import { accessTokenRepository } from "../repositories/accessTokenRepository"
 
 export const TaskList = () => {
 	const tasks = useAtomValue(tasksAtom)
 
 	const { data: repos } = useHasIssuesReposQuery()
+	console.log(accessTokenRepository.get())
 
 	return (
 		<VStack align="stretch" spacing="3" width="100%">
