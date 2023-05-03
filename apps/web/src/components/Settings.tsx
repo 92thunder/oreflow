@@ -3,13 +3,17 @@ import { Button, Container, Heading } from "@chakra-ui/react";
 import { FC } from "react";
 
 const CLIENT_ID = "dee99d42f2afdd9cc7ee"
-const REDIRECT_URI = import.meta.env.PROD
-	? 'https://oreflow.92thunder.dev/settings'
-  : 'http://127.0.0.1:5173/settings'
+const REDIRECT_URI = 'https://oreflow.onrender.com/callback'
 
 export const Settings: FC = () => {
-	const code = new URLSearchParams(window.location.search).get('code')
-	console.log(code)
+	const params = new URLSearchParams(window.location.search)
+	const accessToken = params.get('access_token')
+	console.log(accessToken)
+	if (accessToken) {
+		localStorage.setItem('accessToken', accessToken)
+		window.location.search = ''
+	}
+
 	return (
 		<Container maxW="container.xl" py={4}>
 			<Heading as="h1" size="md" mb="4">Settings</Heading>
