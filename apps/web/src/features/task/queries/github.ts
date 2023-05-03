@@ -8,9 +8,13 @@ export const useHasIssuesReposQuery = () => {
 	return useQuery({
 		queryKey: ['repos'],
 		queryFn: async () => {
-			const response = await octokit.repos.listForAuthenticatedUser()
-			return response.data
-				.filter((repo) => repo.open_issues_count > 0)
+			try {
+				const response = await octokit.repos.listForAuthenticatedUser()
+				return response.data
+					.filter((repo) => repo.open_issues_count > 0)
+			} catch(_) {
+				accessTokenRepository.remove()
+			}
 		},
 		enabled: !!accessTokenRepository.get(),
 	})
