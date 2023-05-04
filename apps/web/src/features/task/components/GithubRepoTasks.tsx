@@ -1,4 +1,4 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Card, CardBody, Link, List, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Card, CardBody, Link, ListItem, UnorderedList } from "@chakra-ui/react";
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import { FC } from "react";
 import { usePullsQuery } from "../queries/github";
