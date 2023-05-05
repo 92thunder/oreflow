@@ -1,10 +1,12 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, Text, useDisclosure } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, Text, list, useDisclosure } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
 import { useSetAtom } from "jotai"
 import { tasksAtom } from "../state"
 import { FC, useRef } from "react"
 import { Task } from "../types"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 
 export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 	const setTasks = useSetAtom(tasksAtom)
@@ -54,10 +56,27 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 			return t
 		}))
 	}
-	console.log(task)
+
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition
+	} = useSortable({ id: task.id })
+
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+	}
 
 	return (
-		<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}>
+		<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}
+			ref={setNodeRef}
+			style={style}
+			{...attributes}
+			{...listeners}
+		>
 			<CardBody py="2">
 				<HStack>
 					<Checkbox isChecked={task.done} onChange={handleChangeDone} />
