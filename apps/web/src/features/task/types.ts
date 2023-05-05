@@ -3,6 +3,7 @@ export type Task = {
 	title: string;
 	done: boolean;
 	projectId: Project['id'] | null
+	divider: boolean
 }
 
 export type Project = {

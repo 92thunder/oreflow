@@ -10,6 +10,7 @@ import { SortableContext, arrayMove, horizontalListSortingStrategy, useSortable 
 import { FC } from "react"
 import { Project } from "../features/task/types"
 import { CSS } from "@dnd-kit/utilities"
+import { restrictToHorizontalAxis } from "@dnd-kit/modifiers"
 
 
 const ProjectTab: FC<{ project: Project }> = ({ project }) => {
@@ -59,7 +60,7 @@ const ProjectTabs: FC<{ projects: Project[] }> = ({ projects }) => {
 	)
 
 	return (
-		<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+		<DndContext sensors={sensors} onDragEnd={handleDragEnd} modifiers={[restrictToHorizontalAxis]}>
 			<SortableContext
 				items={projects}
 				strategy={horizontalListSortingStrategy}

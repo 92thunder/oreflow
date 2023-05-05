@@ -1,5 +1,5 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, Text, list, useDisclosure } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, Text, list, useDisclosure } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
 import { useSetAtom } from "jotai"
 import { tasksAtom } from "../state"
@@ -84,6 +84,30 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 			return t
 		}))
 	}, [draftTitle, setTasks])
+
+	if (task.divider) {
+		return (
+			<HStack
+				ref={setNodeRef}
+				style={style}
+				{...attributes}
+				{...listeners}
+			>
+				<Divider />
+				<Editable
+					value={draftTitle}
+					onCancel={() => { setDraftTitle(task.title) }}
+					onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
+					onChange={(draftValue) => setDraftTitle(draftValue)}
+				>
+					<EditablePreview fontSize={14} />
+					<EditableInput />
+				</Editable>
+				<Divider />
+			</HStack>
+
+		)
+	}
 
 
 	return (

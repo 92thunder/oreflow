@@ -6,6 +6,7 @@ import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSo
 import { DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { tasksAtom } from "../state"
 import { useSetAtom } from "jotai"
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
 
 type Props = {
 	tasks: Task[]
@@ -38,6 +39,7 @@ export const TaskList: FC<Props> = ({ tasks }) => {
 		<DndContext
 			sensors={sensors}
 			onDragEnd={handleDragEnd}
+			modifiers={[restrictToVerticalAxis]}
 		>
 			<SortableContext
 				items={tasks}
