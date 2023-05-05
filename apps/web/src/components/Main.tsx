@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai"
 import { projectsAtom } from "../features/task/state"
 import { AddIcon } from "@chakra-ui/icons"
 import { CreateProject } from "./CreateProject"
+import { EditableProjectTitle } from "../features/task/components/EditableProjectTitle"
 
 export const Main = () => {
 	const projects = useAtomValue(projectsAtom)
@@ -15,9 +16,11 @@ export const Main = () => {
 					<TabList>
 						<Tab>ALL</Tab>
 						{projects.map((project) => (
-							<Tab key={project.id}>{project.title}</Tab>
+							<Tab key={project.id}>
+								<EditableProjectTitle project={project} />
+							</Tab>
 						))}
-						<Tab><AddIcon boxSize={3} /></Tab>
+						<Tab><AddIcon color="gray" boxSize={3} /></Tab>
 					</TabList>
 					<TabPanels>
 						<TabPanel px="0">
