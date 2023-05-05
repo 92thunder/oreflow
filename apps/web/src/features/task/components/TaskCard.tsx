@@ -1,5 +1,5 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, Text, list, useDisclosure } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, useDisclosure } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
 import { useSetAtom } from "jotai"
 import { tasksAtom } from "../state"
@@ -73,6 +73,9 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 	const [draftTitle, setDraftTitle] = useState(task.title)
 	const updateTaskTitle = useCallback(
 		({ id, title }: { id: string, title: string }) => {
+		if (task.divider && !title) {
+			setTasks((tasks) => tasks.filter((t) => t.id !== task.id))
+		}
 		if (!title.trim()) return
 		setTasks((tasks) => tasks.map((t) => {
 			if (t.id === id) {
@@ -83,7 +86,7 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 			}
 			return t
 		}))
-	}, [draftTitle, setTasks])
+	}, [draftTitle, setTasks, task.divider, task.id])
 
 	if (task.divider) {
 		return (
