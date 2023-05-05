@@ -3,7 +3,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
 import { DeleteIcon } from "@chakra-ui/icons"
 import { useSetAtom } from "jotai"
 import { tasksAtom } from "../state"
-import { FC, useRef } from "react"
+import { FC, useCallback, useRef, useState } from "react"
 import { Task } from "../types"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
@@ -69,6 +69,22 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 		transform: CSS.Transform.toString(transform),
 		transition,
 	}
+	
+	const [draftTitle, setDraftTitle] = useState(task.title)
+	const updateTaskTitle = useCallback(
+		({ id, title }: { id: string, title: string }) => {
+		if (!title.trim()) return
+		setTasks((tasks) => tasks.map((t) => {
+			if (t.id === id) {
+				return {
+					...t,
+					title: draftTitle
+				}
+			}
+			return t
+		}))
+	}, [draftTitle, setTasks])
+
 
 	return (
 		<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}
@@ -77,11 +93,17 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 			{...attributes}
 			{...listeners}
 		>
-			<CardBody py="2">
+			<CardBody py="1">
 				<HStack>
 					<Checkbox isChecked={task.done} onChange={handleChangeDone} />
-					<Editable defaultValue={task.title} width="full">
-						<EditablePreview />
+					<Editable
+						value={draftTitle}
+						onCancel={() => { setDraftTitle(task.title) }}
+						onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
+						onChange={(draftValue) => setDraftTitle(draftValue)}
+						width="full"
+					>
+						<EditablePreview fontSize={14}/>
 						<EditableInput />
 					</Editable>
 					<Spacer />

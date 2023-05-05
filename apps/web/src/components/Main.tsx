@@ -65,7 +65,7 @@ const ProjectTabs: FC<{ projects: Project[] }> = ({ projects }) => {
 				strategy={horizontalListSortingStrategy}
 			>
 				{projects.map((project) => (
-						<ProjectTab key={project.id} project={project} />
+					<ProjectTab key={project.id} project={project} />
 				))}
 			</SortableContext>
 		</DndContext>
