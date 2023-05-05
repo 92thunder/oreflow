@@ -1,5 +1,5 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, HStack, IconButton, Spacer, Text, useDisclosure } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, Text, useDisclosure } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
 import { useSetAtom } from "jotai"
 import { tasksAtom } from "../state"
@@ -43,12 +43,28 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 		)
 	}
 
+	const handleChangeDone = () => {
+		setTasks((tasks) => tasks.map((t) => {
+			if (t.id === task.id) {
+				return {
+					...t,
+					done: !t.done
+				}
+			}
+			return t
+		}))
+	}
+	console.log(task)
+
 	return (
-		<Card width="full" size="sm">
+		<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}>
 			<CardBody py="2">
 				<HStack>
-					<Checkbox checked={task.done} />
-					<Text>{task.title}</Text>
+					<Checkbox isChecked={task.done} onChange={handleChangeDone} />
+					<Editable defaultValue={task.title} width="full">
+						<EditablePreview />
+						<EditableInput />
+					</Editable>
 					<Spacer />
 					<IconButton
 						size="sm"
