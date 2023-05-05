@@ -18,6 +18,7 @@ export const TaskForm = () => {
 				id: crypto.randomUUID(),
 				title: draftTitle,
 				done: false,
+				projectId: null,
 			},
 			...tasks,
 		]))
