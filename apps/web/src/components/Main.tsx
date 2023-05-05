@@ -21,11 +21,11 @@ export const Main = () => {
 					</TabList>
 					<TabPanels>
 						<TabPanel px="0">
-							<TaskContainer />
+							<TaskContainer projectId="all"/>
 						</TabPanel>
 						{projects.map((project) => (
 							<TabPanel key={project.id} px="0">
-								<TaskContainer />
+								<TaskContainer projectId={project.id} />
 							</TabPanel>
 						))}
 						<TabPanel px="0">

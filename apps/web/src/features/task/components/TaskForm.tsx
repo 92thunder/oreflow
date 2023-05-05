@@ -1,9 +1,13 @@
 import { useSetAtom } from "jotai"
-import { ChangeEvent, FormEventHandler, useState } from "react"
+import { ChangeEvent, FC, FormEventHandler, useState } from "react"
 import { tasksAtom } from "../state"
 import { Input } from "@chakra-ui/react"
 
-export const TaskForm = () => {
+type Props = {
+	projectId: string
+}
+
+export const TaskForm: FC<Props> = ({ projectId }) => {
 	const setTasks = useSetAtom(tasksAtom)
 	const [draftTitle, setDraftTitle] = useState('')
 
@@ -18,7 +22,7 @@ export const TaskForm = () => {
 				id: crypto.randomUUID(),
 				title: draftTitle,
 				done: false,
-				projectId: null,
+				projectId: projectId === 'all' ? null : projectId,
 			},
 			...tasks,
 		]))
