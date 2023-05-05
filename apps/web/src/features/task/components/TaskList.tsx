@@ -17,12 +17,12 @@ export const TaskList: FC<Props> = ({ tasks }) => {
 	const doneTasks = useMemo(() => tasks.filter((task) => task.done), [tasks])
 
 	const sensors = useSensors(
-		useSensor(PointerSensor),
-		useSensor(KeyboardSensor, {
-			coordinateGetter: sortableKeyboardCoordinates
-		})
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 5,
+			}
+		}),
 	)
-
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event
 		if (over && active.id !== over.id) {
@@ -31,9 +31,7 @@ export const TaskList: FC<Props> = ({ tasks }) => {
 				const newIndex = tasks.findIndex((task) => task.id === over.id)
 				return arrayMove(tasks, oldIndex, newIndex)
 			})
-
 		}
-
 	}
 
 	return (
