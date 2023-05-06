@@ -49,23 +49,25 @@ export const TaskList: FC<Props> = ({ tasks }) => {
 					{todoTasks.map((task) => (
 						<TaskCard task={task} key={task.id} />
 					))}
-					<Divider />
 					{doneTasks.length > 0 && (
-						<Accordion allowMultiple>
-							<AccordionItem>
-								<AccordionButton>
-									Done tasks
-									<AccordionIcon />
-								</AccordionButton>
-								<AccordionPanel>
-									<VStack spacing="3" width="100%">
-										{doneTasks.map((task) => (
-											<TaskCard task={task} key={task.id} />
-										))}
-									</VStack>
-								</AccordionPanel>
-							</AccordionItem>
-						</Accordion>
+						<>
+							<Divider />
+							<Accordion allowMultiple>
+								<AccordionItem>
+									<AccordionButton>
+										Done tasks
+										<AccordionIcon />
+									</AccordionButton>
+									<AccordionPanel>
+										<VStack spacing="3" width="100%">
+											{doneTasks.map((task) => (
+												<TaskCard task={task} key={task.id} />
+											))}
+										</VStack>
+									</AccordionPanel>
+								</AccordionItem>
+							</Accordion>
+						</>
 					)}
 				</VStack>
 			</SortableContext>
