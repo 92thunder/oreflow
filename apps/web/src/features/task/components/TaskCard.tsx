@@ -1,49 +1,89 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Editable, EditableInput, EditablePreview, HStack, IconButton, Spacer, useDisclosure } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Editable, EditableInput, EditablePreview, HStack, IconButton, Select, Spacer, useDisclosure } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
-import { useSetAtom } from "jotai"
-import { tasksAtom } from "../state"
-import { FC, useCallback, useRef, useState } from "react"
+import { useAtomValue, useSetAtom } from "jotai"
+import { projectsAtom, tasksAtom } from "../state"
+import { ChangeEventHandler, FC, useCallback, useRef, useState } from "react"
 import { Task } from "../types"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+
+const TaskDrawer: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = ({ task, isOpen, onClose }) => {
+	const projects = useAtomValue(projectsAtom)
+	const setTasks = useSetAtom(tasksAtom)
+	const handleChangeProject: ChangeEventHandler<HTMLSelectElement> = (event) => {
+		setTasks((tasks) => tasks.map((t) => {
+			if (t.id === task.id) {
+				return {
+					...t,
+					projectId: event.target.value === 'none'
+						? null
+						: event.target.value
+				}
+			}
+			return t
+		}))
+	}
+
+	return (
+		<Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+			<DrawerOverlay />
+			<DrawerContent>
+				<DrawerCloseButton />
+				<DrawerHeader>Edit task</DrawerHeader>
+				<DrawerBody>
+					<Select defaultValue={task.projectId ? task.projectId : ''} placeholder="Select project" onChange={handleChangeProject}>
+						<option value="none">none</option>
+						{projects.map((project) => (
+							<option key={project.id} value={project.id}>{project.title}</option>
+						))}
+					</Select>
+				</DrawerBody>
+			</DrawerContent>
+		</Drawer>
+	)
+}
+
+const DeleteDialog: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = ({ task, isOpen, onClose }) => {
+	const cancelRef = useRef<HTMLButtonElement>(null)
+	const setTasks = useSetAtom(tasksAtom)
+
+	const handleClickDeleteButton = () => {
+		setTasks((tasks) => tasks.filter((t) => t.id !== task.id))
+		onClose()
+	}
+
+	return (
+		<AlertDialog
+			leastDestructiveRef={cancelRef}
+			isOpen={isOpen}
+			onClose={onClose}
+		>
+			<AlertDialogOverlay>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						Delete Task?
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<Button ref={cancelRef} onClick={onClose}>
+							Cancel
+						</Button>
+						<Button onClick={handleClickDeleteButton} ml={3} colorScheme="red">
+							Delete
+						</Button>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialogOverlay>
+		</AlertDialog>
+	)
+}
+
 
 export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 	const setTasks = useSetAtom(tasksAtom)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
-	const DeleteDialog: FC<{ task: Task }> = ({ task }) => {
-		const cancelRef = useRef<HTMLButtonElement>(null)
-
-		const handleClickDeleteButton = () => {
-			setTasks((tasks) => tasks.filter((t) => t.id !== task.id))
-			onClose()
-		}
-
-		return (
-			<AlertDialog
-				leastDestructiveRef={cancelRef}
-				isOpen={isOpen}
-				onClose={onClose}
-			>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader>
-							Delete Task?
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<Button ref={cancelRef} onClick={onClose}>
-								Cancel
-							</Button>
-							<Button onClick={handleClickDeleteButton} ml={3} colorScheme="red">
-								Delete
-							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
-		)
-	}
+	const { isOpen: isOpenDrawer, onOpen: onOpenDrawer, onClose: onCloseDrawer } = useDisclosure()
 
 	const handleChangeDone = () => {
 		setTasks((tasks) => tasks.map((t) => {
@@ -112,38 +152,41 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 		)
 	}
 
-
 	return (
-		<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}
-			ref={setNodeRef}
-			style={style}
-			{...attributes}
-			{...listeners}
-		>
-			<CardBody py="1">
-				<HStack>
-					<Checkbox isChecked={task.done} onChange={handleChangeDone} />
-					<Editable
-						value={draftTitle}
-						onCancel={() => { setDraftTitle(task.title) }}
-						onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
-						onChange={(draftValue) => setDraftTitle(draftValue)}
-						width="full"
-					>
-						<EditablePreview fontSize={14}/>
-						<EditableInput />
-					</Editable>
-					<Spacer />
-					<IconButton
-						size="sm"
-						aria-label="Delete task"
-						variant="ghost"
-						icon={<DeleteIcon color="gray" />}
-						onClick={onOpen}
-					/>
-					<DeleteDialog task={task} />
-				</HStack>
-			</CardBody>
-		</Card>
+		<>
+			<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}
+				ref={setNodeRef}
+				style={style}
+				{...attributes}
+				{...listeners}
+				onClick={onOpenDrawer}
+			>
+				<CardBody py="1">
+					<HStack>
+						<Checkbox isChecked={task.done} onChange={handleChangeDone} />
+						<Editable
+							value={draftTitle}
+							onCancel={() => { setDraftTitle(task.title) }}
+							onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
+							onChange={(draftValue) => setDraftTitle(draftValue)}
+							width="full"
+						>
+							<EditablePreview fontSize={14}/>
+							<EditableInput />
+						</Editable>
+						<Spacer />
+						<IconButton
+							size="sm"
+							aria-label="Delete task"
+							variant="ghost"
+							icon={<DeleteIcon color="gray" />}
+							onClick={onOpen}
+						/>
+					</HStack>
+				</CardBody>
+			</Card>
+			<DeleteDialog task={task} isOpen={isOpen} onClose={onClose}/>
+			<TaskDrawer task={task} isOpen={isOpenDrawer} onClose={onCloseDrawer} />
+		</>
 	)
 }
