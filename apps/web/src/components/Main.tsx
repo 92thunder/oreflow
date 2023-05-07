@@ -116,11 +116,13 @@ export const Main = () => {
 					<SignIn />
 				) : (
 					<Tabs>
-						<TabList>
-							<Tab>ALL</Tab>
-							<ProjectTabs projects={projects} />
-							<Tab><AddIcon color="gray" boxSize={3} /></Tab>
-						</TabList>
+						<Box w="100%" overflowX="auto">
+							<TabList minW="100%" w="max-content">
+								<Tab>ALL</Tab>
+								<ProjectTabs projects={projects} />
+								<Tab><AddIcon color="gray" boxSize={3} /></Tab>
+							</TabList>
+						</Box>
 						<TabPanels>
 							<TabPanel px="0">
 								<TaskContainer projectId="all"/>
