@@ -1,5 +1,5 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Editable, EditableInput, EditablePreview, HStack, IconButton, Select, Spacer, useDisclosure } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Editable, EditableInput, EditablePreview, HStack, IconButton, Select, Spacer, useDisclosure } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
 import { useAtomValue, useSetAtom } from "jotai"
 import { projectsAtom, tasksAtom } from "../state"
@@ -24,6 +24,7 @@ const TaskDrawer: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = ({ 
 			return t
 		}))
 	}
+	const { isOpen: isOpenDeleteDialog, onOpen: onOpenDeleteDialog, onClose: onCloseDeleteDialog } = useDisclosure()
 
 	return (
 		<Drawer isOpen={isOpen} placement="right" onClose={onClose}>
@@ -39,6 +40,16 @@ const TaskDrawer: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = ({ 
 						))}
 					</Select>
 				</DrawerBody>
+				<DrawerFooter>
+					<IconButton
+						size="sm"
+						aria-label="Delete task"
+						colorScheme="red"
+						icon={<DeleteIcon />}
+						onClick={onOpenDeleteDialog}
+					/>
+				</DrawerFooter>
+				<DeleteDialog task={task} isOpen={isOpenDeleteDialog} onClose={onCloseDeleteDialog}/>
 			</DrawerContent>
 		</Drawer>
 	)
@@ -81,7 +92,6 @@ const DeleteDialog: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = (
 
 export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 	const setTasks = useSetAtom(tasksAtom)
-	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	const { isOpen: isOpenDrawer, onOpen: onOpenDrawer, onClose: onCloseDrawer } = useDisclosure()
 
@@ -175,17 +185,9 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 							<EditableInput />
 						</Editable>
 						<Spacer />
-						<IconButton
-							size="sm"
-							aria-label="Delete task"
-							variant="ghost"
-							icon={<DeleteIcon color="gray" />}
-							onClick={onOpen}
-						/>
 					</HStack>
 				</CardBody>
 			</Card>
-			<DeleteDialog task={task} isOpen={isOpen} onClose={onClose}/>
 			<TaskDrawer task={task} isOpen={isOpenDrawer} onClose={onCloseDrawer} />
 		</>
 	)
