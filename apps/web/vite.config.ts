@@ -8,12 +8,4 @@ export default defineConfig({
     VitePWA({ registerType: 'autoUpdate' }),
     react()
   ],
-  define: {
-    global: 'window'
-  },
-  resolve: {
-    alias: {
-      'node-fetch': 'isomorphic-fetch',
-    },
-  },
 })
