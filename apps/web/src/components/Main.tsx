@@ -34,7 +34,6 @@ const ProjectTab: FC<{ project: Project }> = ({ project }) => {
 		<Tab ref={setNodeRef} style={style}
 			{...attributes}
 			{...listeners}
-			as="div"
 		>
 			<EditableProjectTitle project={project} />
 		</Tab>
@@ -87,7 +86,6 @@ export const Main = () => {
 	useEffect(() => {
 		const auth = getAuth()
 		return onAuthStateChanged(auth, (user) => {
-			setLoading(false)
 			setUser(user || null)
 		})
 	}, [setUser])
@@ -96,6 +94,7 @@ export const Main = () => {
 		if (!user) return
 		const db = getFirestore(app)
 		return onSnapshot((doc(db, "users", user.uid)), (doc) => {
+			setLoading(false)
 			if (doc.data()) {
 				const tasks: Task[] = doc.data()?.tasks || []
 				const projects: Project[] = doc.data()?.projects || []
