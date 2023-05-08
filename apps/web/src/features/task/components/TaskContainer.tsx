@@ -18,7 +18,7 @@ export const TaskContainer: FC<Props> = ({ projectId }) => {
 
 	return (
 		<VStack spacing="5">
-			<TaskForm projectId={projectId} />
+			<TaskForm projectId={projectId} insertPosition="last" hideDivider={projectId !== 'all'} />
 			<TaskList tasks={tasks}/>
 		</VStack>
 	)

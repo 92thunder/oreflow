@@ -1,5 +1,5 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Editable, EditableInput, EditablePreview, HStack, IconButton, Select, Spacer, useDisclosure } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, Checkbox, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Editable, EditableInput, EditablePreview, HStack, IconButton, Select, Spacer, VStack, useDisclosure } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
 import { useAtomValue, useSetAtom } from "jotai"
 import { projectsAtom, tasksAtom } from "../state"
@@ -7,6 +7,7 @@ import { ChangeEventHandler, FC, useCallback, useRef, useState } from "react"
 import { Task } from "../types"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+import { TaskForm } from "./TaskForm"
 
 const TaskDrawer: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = ({ task, isOpen, onClose }) => {
 	const projects = useAtomValue(projectsAtom)
@@ -140,26 +141,28 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 
 	if (task.divider) {
 		return (
-			<HStack
+			<VStack align="stretch"
 				ref={setNodeRef}
 				style={style}
 				{...attributes}
 				{...listeners}
 				sx={{ "touchAction": "none" }}
 			>
-				<Divider />
-				<Editable
-					value={draftTitle}
-					onCancel={() => { setDraftTitle(task.title) }}
-					onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
-					onChange={(draftValue) => setDraftTitle(draftValue)}
-				>
-					<EditablePreview fontSize={14} />
-					<EditableInput />
-				</Editable>
-				<Divider />
-			</HStack>
-
+				<HStack>
+					<Divider />
+					<Editable
+						value={draftTitle}
+						onCancel={() => { setDraftTitle(task.title) }}
+						onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
+						onChange={(draftValue) => setDraftTitle(draftValue)}
+					>
+						<EditablePreview fontSize={14} />
+						<EditableInput />
+					</Editable>
+					<Divider />
+				</HStack>
+				<TaskForm projectId={task.projectId || 'all'} insertPosition={{ previous: task.id }} hideDivider />
+			</VStack>
 		)
 	}
 
