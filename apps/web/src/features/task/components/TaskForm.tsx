@@ -19,6 +19,7 @@ export const TaskForm: FC<Props> = ({ projectId }) => {
 	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault()
 		setTasks((tasks) => ([
+			...tasks,
 			{
 				id: crypto.randomUUID(),
 				title: draftTitle,
@@ -26,7 +27,6 @@ export const TaskForm: FC<Props> = ({ projectId }) => {
 				projectId: projectId === 'all' ? null : projectId,
 				divider
 			},
-			...tasks,
 		]))
 		setDraftTitle('')
 	}
