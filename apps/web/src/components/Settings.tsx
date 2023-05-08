@@ -2,6 +2,10 @@ import { Box, Button, Container, Heading, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { accessTokenRepository } from "../features/task/repositories/accessTokenRepository";
 import { getAuth, signOut } from "firebase/auth";
+import { SignIn } from "./SignIn";
+import { useAtomValue } from "jotai";
+import { userAtom } from "../features/task/state";
+import { useNavigate } from "react-router-dom";
 
 const auth = getAuth()
 
@@ -13,18 +17,26 @@ export const Settings: FC = () => {
 		window.location.search = ''
 	}
 
+	const navigate = useNavigate()
+
 	const handleClickSignOutWithGoogle = () => {
-		signOut(auth)
+		signOut(auth).then(() => {
+			navigate('/')
+		})
 	}
+	const user = useAtomValue(userAtom)
 
 	return (
 		<Box>
 			<Container maxW="container.xl" py={4}>
 				<Heading as="h1" size="md" mb="4">Settings</Heading>
 				<VStack align="start" spacing="5">
-					<Button onClick={handleClickSignOutWithGoogle}>
-						Sign out
-					</Button>
+					{user ? 
+						<Button onClick={handleClickSignOutWithGoogle}>
+							Sign out
+						</Button>
+					: <SignIn />
+					}
 				</VStack>
 			</Container>
 		</Box>

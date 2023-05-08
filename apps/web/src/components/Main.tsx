@@ -12,7 +12,6 @@ import { Project, Task } from "../features/task/types"
 import { CSS } from "@dnd-kit/utilities"
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
-import { SignIn } from "./SignIn"
 import { doc, getFirestore, onSnapshot } from "firebase/firestore"
 import { app } from "../utils/firebase"
 
@@ -88,6 +87,9 @@ export const Main = () => {
 		const auth = getAuth()
 		return onAuthStateChanged(auth, (user) => {
 			setUser(user || null)
+			if (!user) {
+				setLoading(false)
+			}
 		})
 	}, [setUser])
 
@@ -112,8 +114,6 @@ export const Main = () => {
 					<Center>
 						<Spinner size="xl" />
 					</Center>
-				) : !user ? (
-					<SignIn />
 				) : (
 					<Tabs>
 						<Box w="100%" overflowX="auto">

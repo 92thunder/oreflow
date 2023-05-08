@@ -2,10 +2,12 @@ import { Button, Center } from "@chakra-ui/react"
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { provider } from "../utils/firebase";
 import { LinkIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 const auth = getAuth()
 
 export const SignIn = () => {
+	const navigate = useNavigate()
 	const handleClickSignInWithGoogle = () => {
 		signInWithPopup(auth, provider)
 			.then((result) => {
@@ -20,6 +22,7 @@ export const SignIn = () => {
 				console.debug(user)
 				// IdP data available using getAdditionalUserInfo(result)
 				// ...
+				navigate('/')
 			}).catch((error) => {
 				console.error(error)
 				// // Handle Errors here.
