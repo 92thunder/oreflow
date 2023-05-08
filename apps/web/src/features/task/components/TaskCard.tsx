@@ -90,23 +90,8 @@ const DeleteDialog: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = (
 	)
 }
 
-
-export const TaskCard: FC<{ task: Task }> = ({ task }) => {
+const TaskDivider: FC<{ task: Task }> = ({ task }) => {
 	const setTasks = useSetAtom(tasksAtom)
-
-	const { isOpen: isOpenDrawer, onOpen: onOpenDrawer, onClose: onCloseDrawer } = useDisclosure()
-
-	const handleChangeDone = () => {
-		setTasks((tasks) => tasks.map((t) => {
-			if (t.id === task.id) {
-				return {
-					...t,
-					done: !t.done
-				}
-			}
-			return t
-		}))
-	}
 
 	const {
 		attributes,
@@ -115,13 +100,13 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 		transform,
 		transition
 	} = useSortable({ id: task.id })
-
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
 	}
-	
+
 	const [draftTitle, setDraftTitle] = useState(task.title)
+
 	const updateTaskTitle = useCallback(
 		({ id, title }: { id: string, title: string }) => {
 		if (task.divider && !title) {
@@ -139,33 +124,78 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 		}))
 	}, [draftTitle, setTasks, task.divider, task.id])
 
-	if (task.divider) {
-		return (
-			<VStack align="stretch"
-				ref={setNodeRef}
-				style={style}
-				{...attributes}
-				{...listeners}
-				sx={{ "touchAction": "none" }}
-			>
-				<HStack>
-					<Divider />
-					<Editable
-						value={draftTitle}
-						onCancel={() => { setDraftTitle(task.title) }}
-						onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
-						onChange={(draftValue) => setDraftTitle(draftValue)}
-					>
-						<EditablePreview fontSize={14} />
-						<EditableInput />
-					</Editable>
-					<Divider />
-				</HStack>
-				<TaskForm projectId={task.projectId || 'all'} insertPosition={{ previous: task.id }} hideDivider />
-			</VStack>
-		)
+	const [visibleTaskForm, setVisibleTaskForm] = useState(false)
+
+	return (
+		<VStack align="stretch"
+			ref={setNodeRef}
+			style={style}
+			{...attributes}
+			{...listeners}
+			sx={{ "touchAction": "none" }}
+		>
+			<HStack onClick={() => setVisibleTaskForm(!visibleTaskForm)}>
+				<Divider/>
+				<Editable
+					value={draftTitle}
+					onCancel={() => { setDraftTitle(task.title) }}
+					onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
+					onChange={(draftValue) => setDraftTitle(draftValue)}
+				>
+					<EditablePreview fontSize={14} />
+					<EditableInput />
+				</Editable>
+				<Divider />
+			</HStack>
+			{visibleTaskForm && <TaskForm projectId={task.projectId || 'all'} insertPosition={{ previous: task.id }} hideDivider />}
+		</VStack>
+	)
+}
+
+export const TaskCardItem: FC<{ task: Task }> = ({ task }) => {
+	const setTasks = useSetAtom(tasksAtom)
+	const { isOpen: isOpenDrawer, onOpen: onOpenDrawer, onClose: onCloseDrawer } = useDisclosure()
+
+	const handleChangeDone = () => {
+		setTasks((tasks) => tasks.map((t) => {
+			if (t.id === task.id) {
+				return {
+					...t,
+					done: !t.done
+				}
+			}
+			return t
+		}))
 	}
 
+	const [draftTitle, setDraftTitle] = useState(task.title)
+	const updateTaskTitle = useCallback(
+		({ id, title }: { id: string, title: string }) => {
+		if (!title.trim()) return
+		setTasks((tasks) => tasks.map((t) => {
+			if (t.id === id) {
+				return {
+					...t,
+					title: draftTitle
+				}
+			}
+			return t
+		}))
+	}, [draftTitle, setTasks])
+
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition
+	} = useSortable({ id: task.id })
+
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+	}
+	
 	return (
 		<>
 			<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}
@@ -195,4 +225,12 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 			<TaskDrawer task={task} isOpen={isOpenDrawer} onClose={onCloseDrawer} />
 		</>
 	)
+}
+
+export const TaskCard: FC<{ task: Task }> = ({ task }) => {
+	if (task.divider) {
+		return <TaskDivider task={task} />
+	} else {
+		return <TaskCardItem task={task} />
+	}
 }
