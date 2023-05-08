@@ -1,7 +1,7 @@
 import { useSetAtom } from "jotai"
 import { ChangeEvent, FC, FormEventHandler, useState } from "react"
 import { tasksAtom } from "../state"
-import { HStack, IconButton, Input } from "@chakra-ui/react"
+import { HStack, IconButton, Input, Tooltip } from "@chakra-ui/react"
 import { MinusIcon } from "@chakra-ui/icons"
 
 type Props = {
@@ -37,13 +37,15 @@ export const TaskForm: FC<Props> = ({ projectId }) => {
 		<form onSubmit={handleSubmit} style={{ width: '100%' }}>
 			<HStack>
 				<Input placeholder="+" bg="white" value={draftTitle} onChange={handleChange} />
-				<IconButton
-					onClick={() => setDivider(divider => !divider)}
-					variant={divider ? "solid" : "ghost"}
-					colorScheme={divider ? "blue" : "gray"}
-					size="xs" aria-label="Enable divider"
-					icon={<MinusIcon />}
-				/>
+				<Tooltip label="as divider" placement="bottom-end">
+					<IconButton
+						onClick={() => setDivider(divider => !divider)}
+						variant={divider ? "solid" : "ghost"}
+						colorScheme={divider ? "blue" : "gray"}
+						size="xs" aria-label="Enable divider"
+						icon={<MinusIcon />}
+					/>
+				</Tooltip>
 			</HStack>
 		</form>
 	)

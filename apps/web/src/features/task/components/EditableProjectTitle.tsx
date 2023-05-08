@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Editable, EditableInput, EditablePreview, FormControl, FormLabel, HStack, IconButton, useDisclosure, useEditableControls } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Editable, EditableInput, EditablePreview, FormControl, FormLabel, HStack, IconButton, Tooltip, useDisclosure, useEditableControls } from "@chakra-ui/react"
 import { Project } from "../types"
 import { FC, useCallback, useRef, useState } from "react"
 import { useSetAtom } from "jotai"
@@ -146,9 +146,11 @@ export const EditableProjectTitle: FC<Props> = ({ project }) => {
 
 	return (
 		<>
-			<Box onDoubleClick={onOpen}>
-				{project.title}
-			</Box>
+			<Tooltip label="double click to edit" openDelay={500}>
+				<Box onDoubleClick={onOpen}>
+					{project.title}
+				</Box>
+			</Tooltip>
 			<ProjectDrawer project={project} isOpen={isOpen} onClose={onClose} />
 		</>
 	)
