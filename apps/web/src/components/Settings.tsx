@@ -1,4 +1,3 @@
-import { LinkIcon } from "@chakra-ui/icons";
 import { Box, Button, Container, Heading, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { accessTokenRepository } from "../features/task/repositories/accessTokenRepository";
@@ -24,8 +23,7 @@ export const Settings: FC = () => {
 				<Heading as="h1" size="md" mb="4">Settings</Heading>
 				<VStack align="start" spacing="5">
 					<Button onClick={handleClickSignOutWithGoogle}>
-						<LinkIcon fontSize="sm" mr="2" />
-						Sign out with Google
+						Sign out
 					</Button>
 				</VStack>
 			</Container>
