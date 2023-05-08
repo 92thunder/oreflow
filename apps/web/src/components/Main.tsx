@@ -34,6 +34,7 @@ const ProjectTab: FC<{ project: Project }> = ({ project }) => {
 		<Tab ref={setNodeRef} style={style}
 			{...attributes}
 			{...listeners}
+			sx={{ "touchAction": "none" }}
 		>
 			<EditableProjectTitle project={project} />
 		</Tab>

@@ -145,6 +145,7 @@ export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 				style={style}
 				{...attributes}
 				{...listeners}
+				sx={{ "touchAction": "none" }}
 			>
 				<Divider />
 				<Editable
