@@ -12,7 +12,6 @@ const ProjectDrawer: FC<{ project: Project, isOpen: boolean, onClose: () => void
 
 	const updateProjectTitle = useCallback(
 		({ id, title }: { id: string, title: string }) => {
-			console.log(title)
 			if (!title.trim()) return
 			setProjects((projects) => projects.map((project) => {
 				if (project.id === id) {

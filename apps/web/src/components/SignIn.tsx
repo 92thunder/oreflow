@@ -9,17 +9,15 @@ export const SignIn = () => {
 	const handleClickSignInWithGoogle = () => {
 		signInWithPopup(auth, provider)
 			.then((result) => {
-				console.log(result)
-				if (!result) return
 				// This gives you a Google Access Token. You can use it to access Google APIs.
 				const credential = GoogleAuthProvider.credentialFromResult(result);
 				if (!credential || !result) return
 				const token = credential.accessToken;
-				console.log(token)
+				console.debug(token)
 
 				// The signed-in user info.
 				const user = result.user;
-				console.log(user)
+				console.debug(user)
 				// IdP data available using getAdditionalUserInfo(result)
 				// ...
 			}).catch((error) => {

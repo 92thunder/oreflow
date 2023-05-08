@@ -8,9 +8,7 @@ export const getTasks = async (uid: string): Promise<Task[]> => {
 	try {
 		const docRef = doc(db, "users", uid)
 		const docSnap = await getDoc(docRef)
-		console.log(docSnap)
 		if (docSnap.exists()) {
-			console.log(docSnap.data().tasks)
 			return docSnap.data().tasks
 		} else {
 			await setDoc(docRef, {
@@ -41,9 +39,7 @@ export const getProjects = async (uid: string): Promise<Project[]> => {
 	try {
 		const docRef = doc(db, "users", uid)
 		const docSnap = await getDoc(docRef)
-		console.log(docSnap)
 		if (docSnap.exists()) {
-			console.log(docSnap.data().projects)
 			return docSnap.data().projects
 		} else {
 			await setDoc(docRef, {
