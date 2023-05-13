@@ -5,6 +5,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import { Settings } from "./components/Settings"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { DndContext } from "@dnd-kit/core"
+import { useEffect } from "react"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { useSetAtom } from "jotai"
+import { userAtom } from "./features/task/state"
 
 const router = createBrowserRouter([
   {
@@ -20,6 +24,14 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient()
 
 export const App = () => {
+	const setUser = useSetAtom(userAtom)
+	useEffect(() => {
+		const auth = getAuth()
+		return onAuthStateChanged(auth, (user) => {
+			setUser(user || null)
+		})
+	}, [setUser])
+
   return (
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>

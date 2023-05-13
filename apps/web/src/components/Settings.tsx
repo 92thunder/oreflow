@@ -1,4 +1,4 @@
-import { Box, Button, Container, Heading, VStack } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Spinner, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { accessTokenRepository } from "../features/task/repositories/accessTokenRepository";
 import { getAuth, signOut } from "firebase/auth";
@@ -35,7 +35,9 @@ export const Settings: FC = () => {
 						<Button onClick={handleClickSignOutWithGoogle}>
 							Sign out
 						</Button>
-					: <SignIn />
+					: user === null
+					? <SignIn />
+					: <Spinner size="xl" />
 					}
 				</VStack>
 			</Container>

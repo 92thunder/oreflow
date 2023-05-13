@@ -1,6 +1,6 @@
 import { Box, Center, Container, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import { TaskContainer } from "../features/task/components/TaskContainer"
-import { useAtom, useSetAtom } from "jotai"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { projectsAtom, tasksAtom, userAtom } from "../features/task/state"
 import { AddIcon } from "@chakra-ui/icons"
 import { CreateProject } from "./CreateProject"
@@ -80,18 +80,14 @@ export const Main = () => {
 	const [projects, setProjects] = useAtom(projectsAtom)
 	const setTasks = useSetAtom(tasksAtom)
 
-	const [user, setUser] = useAtom(userAtom)
+	const user = useAtomValue(userAtom)
 	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
-		const auth = getAuth()
-		return onAuthStateChanged(auth, (user) => {
-			setUser(user || null)
-			if (!user) {
-				setLoading(false)
-			}
-		})
-	}, [setUser])
+		if (user === null) {
+			setLoading(false)
+		}
+	}, [user])
 
 	useEffect(() => {
 		if (!user) return
