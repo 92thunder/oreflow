@@ -36,8 +36,8 @@ export const Settings: FC = () => {
 							Sign out
 						</Button>
 					: user === null
-					? <SignIn />
-					: <Spinner size="xl" />
+						? <SignIn />
+						: <Spinner size="xl" />
 					}
 				</VStack>
 			</Container>
