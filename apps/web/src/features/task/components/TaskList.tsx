@@ -36,41 +36,41 @@ export const TaskList: FC<Props> = ({ tasks }) => {
 	}
 
 	return (
-		<DndContext
-			sensors={sensors}
-			onDragEnd={handleDragEnd}
-			modifiers={[restrictToVerticalAxis]}
-		>
-			<SortableContext
-				items={tasks}
-				strategy={verticalListSortingStrategy}
+		<VStack align="stretch" spacing="3" width="100%">
+			<DndContext
+				sensors={sensors}
+				onDragEnd={handleDragEnd}
+				modifiers={[restrictToVerticalAxis]}
 			>
-				<VStack align="stretch" spacing="3" width="100%">
-					{todoTasks.map((task) => (
-						<TaskCard task={task} key={task.id} />
-					))}
-					{doneTasks.length > 0 && (
-						<>
-							<Divider />
-							<Accordion allowMultiple>
-								<AccordionItem>
-									<AccordionButton>
-										Done tasks
-										<AccordionIcon />
-									</AccordionButton>
-									<AccordionPanel>
-										<VStack spacing="3" width="100%">
-											{doneTasks.map((task) => (
-												<TaskCard task={task} key={task.id} />
-											))}
-										</VStack>
-									</AccordionPanel>
-								</AccordionItem>
-							</Accordion>
-						</>
-					)}
-				</VStack>
-			</SortableContext>
-		</DndContext>
+				<SortableContext
+					items={tasks}
+					strategy={verticalListSortingStrategy}
+				>
+						{todoTasks.map((task) => (
+							<TaskCard task={task} key={task.id} />
+						))}
+						{doneTasks.length > 0 && (
+							<>
+								<Divider />
+								<Accordion allowMultiple>
+									<AccordionItem>
+										<AccordionButton>
+											Done tasks
+											<AccordionIcon />
+										</AccordionButton>
+										<AccordionPanel>
+											<VStack spacing="3" width="100%">
+												{doneTasks.map((task) => (
+													<TaskCard task={task} key={task.id} />
+												))}
+											</VStack>
+										</AccordionPanel>
+									</AccordionItem>
+								</Accordion>
+							</>
+						)}
+				</SortableContext>
+			</DndContext>
+		</VStack>
 	)
 }

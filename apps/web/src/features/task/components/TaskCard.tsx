@@ -90,20 +90,15 @@ const DeleteDialog: FC<{ task: Task, isOpen: boolean, onClose: () => void }> = (
 	)
 }
 
-const TaskDivider: FC<{ task: Task }> = ({ task }) => {
-	const setTasks = useSetAtom(tasksAtom)
+type SortableItemProps = {
+	setNodeRef: ReturnType<typeof useSortable>['setNodeRef']
+	listeners: ReturnType<typeof useSortable>['listeners']
+	attributes: ReturnType<typeof useSortable>['attributes']
+	style: object
+}
 
-	const {
-		attributes,
-		listeners,
-		setNodeRef,
-		transform,
-		transition
-	} = useSortable({ id: task.id })
-	const style = {
-		transform: CSS.Transform.toString(transform),
-		transition,
-	}
+const TaskDivider: FC<{ task: Task } & SortableItemProps> = ({ task, attributes, listeners, setNodeRef, style }) => {
+	const setTasks = useSetAtom(tasksAtom)
 
 	const [draftTitle, setDraftTitle] = useState(task.title)
 
@@ -127,7 +122,7 @@ const TaskDivider: FC<{ task: Task }> = ({ task }) => {
 	const [visibleTaskForm, setVisibleTaskForm] = useState(false)
 
 	return (
-		<VStack align="stretch"
+		<VStack align="normal"
 			ref={setNodeRef}
 			style={style}
 			{...attributes}
@@ -152,7 +147,7 @@ const TaskDivider: FC<{ task: Task }> = ({ task }) => {
 	)
 }
 
-export const TaskCardItem: FC<{ task: Task }> = ({ task }) => {
+export const TaskCardItem: FC<{ task: Task } & SortableItemProps> = ({ task, attributes, listeners, setNodeRef, style }) => {
 	const setTasks = useSetAtom(tasksAtom)
 	const { isOpen: isOpenDrawer, onOpen: onOpenDrawer, onClose: onCloseDrawer } = useDisclosure()
 
@@ -183,6 +178,37 @@ export const TaskCardItem: FC<{ task: Task }> = ({ task }) => {
 		}))
 	}, [draftTitle, setTasks])
 
+	return (
+		<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}
+			ref={setNodeRef}
+			style={style}
+			{...attributes}
+			{...listeners}
+			onClick={onOpenDrawer}
+			sx={{ "touchAction": "none" }}
+		>
+			<CardBody py="1">
+				<HStack>
+					<Checkbox isChecked={task.done} onChange={handleChangeDone} />
+					<Editable
+						value={draftTitle}
+						onCancel={() => { setDraftTitle(task.title) }}
+						onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
+						onChange={(draftValue) => setDraftTitle(draftValue)}
+						width="full"
+					>
+						<EditablePreview fontSize={14}/>
+						<EditableInput />
+					</Editable>
+					<Spacer />
+				</HStack>
+			</CardBody>
+			<TaskDrawer task={task} isOpen={isOpenDrawer} onClose={onCloseDrawer} />
+		</Card>
+	)
+}
+
+export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 	const {
 		attributes,
 		listeners,
@@ -190,47 +216,16 @@ export const TaskCardItem: FC<{ task: Task }> = ({ task }) => {
 		transform,
 		transition
 	} = useSortable({ id: task.id })
+	console.log(transform?.y)
 
 	const style = {
-		transform: CSS.Transform.toString(transform),
+		transform: CSS.Transform.toString(transform ? { ...transform,  scaleY: 1 }: transform),
 		transition,
 	}
-	
-	return (
-		<>
-			<Card width="full" size="sm" bgColor={task.done ? "gray.300": "white"}
-				ref={setNodeRef}
-				style={style}
-				{...attributes}
-				{...listeners}
-				onClick={onOpenDrawer}
-			>
-				<CardBody py="1">
-					<HStack>
-						<Checkbox isChecked={task.done} onChange={handleChangeDone} />
-						<Editable
-							value={draftTitle}
-							onCancel={() => { setDraftTitle(task.title) }}
-							onSubmit={(value) => updateTaskTitle({ id: task.id, title: value })}
-							onChange={(draftValue) => setDraftTitle(draftValue)}
-							width="full"
-						>
-							<EditablePreview fontSize={14}/>
-							<EditableInput />
-						</Editable>
-						<Spacer />
-					</HStack>
-				</CardBody>
-			</Card>
-			<TaskDrawer task={task} isOpen={isOpenDrawer} onClose={onCloseDrawer} />
-		</>
-	)
-}
 
-export const TaskCard: FC<{ task: Task }> = ({ task }) => {
 	if (task.divider) {
-		return <TaskDivider task={task} />
+		return <TaskDivider task={task} setNodeRef={setNodeRef} listeners={listeners} attributes={attributes} style={style} />
 	} else {
-		return <TaskCardItem task={task} />
+		return <TaskCardItem task={task}  setNodeRef={setNodeRef} listeners={listeners} attributes={attributes} style={style}/>
 	}
 }
