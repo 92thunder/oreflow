@@ -5,8 +5,16 @@ import manifest from './manifest.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      input: {
+        sidepanel: 'sidepanel.html',
+      },
+    },
+  },
   plugins: [
     react(),
     crx({ manifest })
-  ]
+  ],
 })
