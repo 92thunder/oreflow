@@ -11,7 +11,8 @@
   "license": "ISC",
   "workspaces": [
     "apps/web",
-    "apps/server"
+    "apps/server",
+    "apps/ext"
   ],
   "devDependencies": {
     "typescript": "^5.0.4"
